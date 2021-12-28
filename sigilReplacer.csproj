@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>replaces the sigils if it detects a dup</Description>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>sigilReplacer</AssemblyName>
+    <RootNamespace>sigilReplacer</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Analyzers" Version="1.0.7" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.Core" Version="5.4.16" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="1.1.0" />
+    <PackageReference Include="UnityEngine.Modules" Version="2019.4.24" IncludeAssets="compile" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="API, version=1.12.1.0">
+      <HintPath>lib\API.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>lib\Assembly-CSharp.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <CopyLocal>False</CopyLocal>
+    </Reference>
+    <Reference Include="Sirenix.Serialization">
+      <HintPath>lib\Sirenix.Serialization.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
+  <Target Name="CopyDLLs" AfterTargets="Build">
+    <Message Text="Executing CopyDLLs task" Importance="High" />
+
+    <Copy SourceFiles="$(TargetDir)$(ProjectName).dll;" DestinationFolder="S:\Program Files (x86)\Steam\steamapps\common\Inscryption\BepInEx\plugins\1 test mod" />
+
+    <Message Text="Copied build files" Importance="High" />
+  </Target>
+  
+
+  
+</Project>
