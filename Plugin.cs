@@ -2,7 +2,8 @@ using BepInEx;
 using BepInEx.Logging;
 using DiskCardGame;
 using HarmonyLib;
-using APIPlugin;
+using System.Collections.Generic;
+using BepInEx.Configuration;
 
 
 namespace sigilReplacer
@@ -23,8 +24,12 @@ namespace sigilReplacer
 		public const string VGUID = "extraVoid.inscryption.voidSigils";
 		private const string JGUID = "MADH.inscryption.JSONLoader";
 		public const string PluginGuid = "zzzzVoid.inscryption.sigil_patcher";
-		private const string PluginName = "Void Sigil Patcher";
+		private const string PluginName = "Void's Sigil Manager";
 		private const string PluginVersion = "1.0.0";
+
+		internal static ConfigEntry<bool> configHideUnuseAbilities;
+
+		internal static ConfigEntry<string> configList;
 
 
 
@@ -39,7 +44,16 @@ namespace sigilReplacer
 			Harmony harmony = new(PluginGuid);
 			harmony.PatchAll();
 
+			configHideUnuseAbilities = Config.Bind("Hide Unused Abilities", "Hide Unused Abilities", false, "Should the sigil manager go thru all abilities on cards, and hide those not used? Off by default.");
+			ConfigDefinition definition = new ConfigDefinition("Whitelist to Prevent Abilities from being Hidden", "Whitelist");
+			ConfigDescription description = new ConfigDescription("Items on this list will not be removed from the rulebook. Put the RULEBOOK names seperated by a comma, like in the example below. Do not remove the default values, as those are there to prevent other sigils from breaking.");
+
+
+			configList = Config.Bind(definition, "Dying,Sickness,Burning", description);
+
 			
+
+
 		}
 
 		private void Start()
@@ -73,446 +87,14 @@ namespace sigilReplacer
 			else
 			{
 				Log.LogMessage("Do I see the Sigil a Day DLL? No, no I do not");
+			}
 
+			if (configHideUnuseAbilities.Value == true)
+            {
+				SigilHider.HideUnuseSigils();
 			}
 
 
 		}
-	}
-
-	public class SigilReplacer
-	{
-		public static void DoZergStuff()
-		{
-			Ability port;
-			Ability original;
-
-			port = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.VGUID, "Fish Hook").id;
-			original = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.ZGUID, "Fish Hook").id;
-			var card = ScriptableObjectLoader<CardInfo>.AllData;
-			var ability = NewAbility.abilities;
-
-			Plugin.Log.LogMessage("Found Original Ability: Fish Hook");
-
-			for (int index = 0; index < card.Count; index++)
-			{
-				CardInfo info = card[index];
-				if (info.HasAbility(port))
-				{
-					Plugin.Log.LogMessage("Switching Abilities on Card: " + info.name);
-					info.DefaultAbilities.Remove(port);
-					info.DefaultAbilities.Add(original);
-				}
-			}
-
-			for (int index = 0; index < ability.Count; index++)
-			{
-				AbilityInfo info = ability[index].info;
-				if (info.ability == port)
-				{
-					info.metaCategories.Clear();
-					info.powerLevel = 8;
-					info.opponentUsable = false;
-					Plugin.Log.LogMessage("Removing void's version of the ability from the rulebook, totems, and Leshy: " + info.rulebookName);
-				}
-			}
-		}
-
-		public static void DoBloodGuzzler()
-		{
-			Ability port;
-			Ability original;
-
-			port = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.VGUID, "BloodGuzzler").id;
-			original = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.CGUID, "BloodGuzzler").id;
-			var card = ScriptableObjectLoader<CardInfo>.AllData;
-			var ability = NewAbility.abilities;
-
-			Plugin.Log.LogMessage("Found Original Ability: BloodGuzzler");
-
-			for (int index = 0; index < card.Count; index++)
-			{
-				CardInfo info = card[index];
-				if (info.HasAbility(port))
-				{
-					Plugin.Log.LogMessage("Switching Abilities on Card: " + info.name);
-					info.DefaultAbilities.Remove(port);
-					info.DefaultAbilities.Add(original);
-				}
-			}
-
-			for (int index = 0; index < ability.Count; index++)
-			{
-				AbilityInfo info = ability[index].info;
-				if (info.ability == port)
-				{
-					info.metaCategories.Clear();
-					info.powerLevel = 8;
-					info.opponentUsable = false;
-					Plugin.Log.LogMessage("Removing void's version of the ability from the rulebook, totems, and Leshy: " + info.rulebookName);
-				}
-			}
-		}
-
-		public static void DoLeech()
-		{
-			Ability port;
-			Ability original;
-
-			port = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.VGUID, "Leech").id;
-			original = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.CGUID, "Leech").id;
-			var card = ScriptableObjectLoader<CardInfo>.AllData;
-			var ability = NewAbility.abilities;
-
-			Plugin.Log.LogMessage("Found Original Ability: Leech");
-
-			for (int index = 0; index < card.Count; index++)
-			{
-				CardInfo info = card[index];
-				if (info.HasAbility(port))
-				{
-					Plugin.Log.LogMessage("Switching Abilities on Card: " + info.name);
-					info.DefaultAbilities.Remove(port);
-					info.DefaultAbilities.Add(original);
-				}
-			}
-
-			for (int index = 0; index < ability.Count; index++)
-			{
-				AbilityInfo info = ability[index].info;
-				if (info.ability == port)
-				{
-					info.metaCategories.Clear();
-					info.powerLevel = 8;
-					info.opponentUsable = false;
-					Plugin.Log.LogMessage("Removing void's version of the ability from the rulebook, totems, and Leshy: " + info.rulebookName);
-				}
-			}
-		}
-
-		public static void DoRegen1()
-		{
-			Ability port;
-			Ability original;
-
-			port = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.VGUID, "Regen 1").id;
-			original = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.CGUID, "Regen 1").id;
-			var card = ScriptableObjectLoader<CardInfo>.AllData;
-			var ability = NewAbility.abilities;
-
-			Plugin.Log.LogMessage("Found Original Ability: Regen 1");
-
-			for (int index = 0; index < card.Count; index++)
-			{
-				CardInfo info = card[index];
-				if (info.HasAbility(port))
-				{
-					Plugin.Log.LogMessage("Switching Abilities on Card: " + info.name);
-					info.DefaultAbilities.Remove(port);
-					info.DefaultAbilities.Add(original);
-				}
-			}
-
-			for (int index = 0; index < ability.Count; index++)
-			{
-				AbilityInfo info = ability[index].info;
-				if (info.ability == port)
-				{
-					info.metaCategories.Clear();
-					info.powerLevel = 8;
-					info.opponentUsable = false;
-					Plugin.Log.LogMessage("Removing void's version of the ability from the rulebook, totems, and Leshy: " + info.rulebookName);
-				}
-			}
-		}
-
-		public static void DoRegen2()
-		{
-			Ability port;
-			Ability original;
-
-			port = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.VGUID, "Regen 2").id;
-			original = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.CGUID, "Regen 2").id;
-			var card = ScriptableObjectLoader<CardInfo>.AllData;
-			var ability = NewAbility.abilities;
-
-			Plugin.Log.LogMessage("Found Original Ability: Regen 2");
-
-			for (int index = 0; index < card.Count; index++)
-			{
-				CardInfo info = card[index];
-				if (info.HasAbility(port))
-				{
-					Plugin.Log.LogMessage("Switching Abilities on Card: " + info.name);
-					info.DefaultAbilities.Remove(port);
-					info.DefaultAbilities.Add(original);
-				}
-			}
-
-			for (int index = 0; index < ability.Count; index++)
-			{
-				AbilityInfo info = ability[index].info;
-				if (info.ability == port)
-				{
-					info.metaCategories.Clear();
-					info.powerLevel = 8;
-					info.opponentUsable = false;
-					Plugin.Log.LogMessage("Removing void's version of the ability from the rulebook, totems, and Leshy: " + info.rulebookName);
-				}
-			}
-		}
-
-		public static void DoRegen3()
-		{
-			Ability port;
-			Ability original;
-
-			port = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.VGUID, "Regen 3").id;
-			original = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.CGUID, "Regen 3").id;
-			var card = ScriptableObjectLoader<CardInfo>.AllData;
-			var ability = NewAbility.abilities;
-
-			Plugin.Log.LogMessage("Found Original Ability: Regen 3");
-
-			for (int index = 0; index < card.Count; index++)
-			{
-				CardInfo info = card[index];
-				if (info.HasAbility(port))
-				{
-					Plugin.Log.LogMessage("Switching Abilities on Card: " + info.name);
-					info.DefaultAbilities.Remove(port);
-					info.DefaultAbilities.Add(original);
-				}
-			}
-
-			for (int index = 0; index < ability.Count; index++)
-			{
-				AbilityInfo info = ability[index].info;
-				if (info.ability == port)
-				{
-					info.metaCategories.Clear();
-					info.powerLevel = 8;
-					info.opponentUsable = false;
-					Plugin.Log.LogMessage("Removing void's version of the ability from the rulebook, totems, and Leshy: " + info.rulebookName);
-				}
-			}
-		}
-
-		public static void DoRegenFull()
-		{
-			Ability port;
-			Ability original;
-
-			port = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.VGUID, "Regen").id;
-			original = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.CGUID, "Regen").id;
-			var card = ScriptableObjectLoader<CardInfo>.AllData;
-			var ability = NewAbility.abilities;
-
-			Plugin.Log.LogMessage("Found Original Ability: Regen Full");
-
-			for (int index = 0; index < card.Count; index++)
-			{
-				CardInfo info = card[index];
-				if (info.HasAbility(port))
-				{
-					Plugin.Log.LogMessage("Switching Abilities on Card: " + info.name);
-					info.DefaultAbilities.Remove(port);
-					info.DefaultAbilities.Add(original);
-				}
-			}
-
-			for (int index = 0; index < ability.Count; index++)
-			{
-				AbilityInfo info = ability[index].info;
-				if (info.ability == port)
-				{
-					info.metaCategories.Clear();
-					info.powerLevel = 8;
-					info.opponentUsable = false;
-					Plugin.Log.LogMessage("Removing void's version of the ability from the rulebook, totems, and Leshy: " + info.rulebookName);
-				}
-			}
-		}
-
-		public static void DoPoisonous()
-		{
-			Ability port;
-			Ability original;
-
-			port = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.VGUID, "Poisonous").id;
-			original = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.CGUID, "Poisonous").id;
-			var card = ScriptableObjectLoader<CardInfo>.AllData;
-			var ability = NewAbility.abilities;
-
-			Plugin.Log.LogMessage("Found Original Ability: Poisonous");
-
-			for (int index = 0; index < card.Count; index++)
-			{
-				CardInfo info = card[index];
-				if (info.HasAbility(port))
-				{
-					Plugin.Log.LogMessage("Switching Abilities on Card: " + info.name);
-					info.DefaultAbilities.Remove(port);
-					info.DefaultAbilities.Add(original);
-				}
-			}
-
-			for (int index = 0; index < ability.Count; index++)
-			{
-				AbilityInfo info = ability[index].info;
-				if (info.ability == port)
-				{
-					info.metaCategories.Clear();
-					info.powerLevel = 8;
-					info.opponentUsable = false;
-					Plugin.Log.LogMessage("Removing void's version of the ability from the rulebook, totems, and Leshy: " + info.rulebookName);
-				}
-			}
-		}
-
-		public static void DoThickShell()
-		{
-			Ability port;
-			Ability original;
-
-			port = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.VGUID, "Thick Shell").id;
-			original = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.CGUID, "Thick Shell").id;
-			var card = ScriptableObjectLoader<CardInfo>.AllData;
-			var ability = NewAbility.abilities;
-
-			Plugin.Log.LogMessage("Found Original Ability: Thick Shell");
-
-			for (int index = 0; index < card.Count; index++)
-			{
-				CardInfo info = card[index];
-				if (info.HasAbility(port))
-				{
-					Plugin.Log.LogMessage("Switching Abilities on Card: " + info.name);
-					info.DefaultAbilities.Remove(port);
-					info.DefaultAbilities.Add(original);
-				}
-			}
-
-			for (int index = 0; index < ability.Count; index++)
-			{
-				AbilityInfo info = ability[index].info;
-				if (info.ability == port)
-				{
-					info.metaCategories.Clear();
-					info.powerLevel = 8;
-					info.opponentUsable = false;
-					Plugin.Log.LogMessage("Removing void's version of the ability from the rulebook, totems, and Leshy: " + info.rulebookName);
-				}
-			}
-		}
-
-		public static void DoBonePicker()
-		{
-			Ability port;
-			Ability original;
-
-			port = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.VGUID, "Bone Picker").id;
-			original = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.CGUID, "Bone Picker").id;
-			var card = ScriptableObjectLoader<CardInfo>.AllData;
-			var ability = NewAbility.abilities;
-
-			Plugin.Log.LogMessage("Found Original Ability: Bone Picker");
-
-			for (int index = 0; index < card.Count; index++)
-			{
-				CardInfo info = card[index];
-				if (info.HasAbility(port))
-				{
-					Plugin.Log.LogMessage("Switching Abilities on Card: " + info.name);
-					info.DefaultAbilities.Remove(port);
-					info.DefaultAbilities.Add(original);
-				}
-			}
-
-			for (int index = 0; index < ability.Count; index++)
-			{
-				AbilityInfo info = ability[index].info;
-				if (info.ability == port)
-				{
-					info.metaCategories.Clear();
-					info.powerLevel = 8;
-					info.opponentUsable = false;
-					Plugin.Log.LogMessage("Removing void's version of the ability from the rulebook, totems, and Leshy: " + info.rulebookName);
-				}
-			}
-		}
-		public static void DoNutritious()
-		{
-			Ability port;
-			Ability original;
-
-			port = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.VGUID, "Nutritious").id;
-			original = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.CGUID, "Nutritious").id;
-			var card = ScriptableObjectLoader<CardInfo>.AllData;
-			var ability = NewAbility.abilities;
-
-			Plugin.Log.LogMessage("Found Original Ability: Nutritious");
-
-			for (int index = 0; index < card.Count; index++)
-			{
-				CardInfo info = card[index];
-				if (info.HasAbility(port))
-				{
-					Plugin.Log.LogMessage("Switching Abilities on Card: " + info.name);
-					info.DefaultAbilities.Remove(port);
-					info.DefaultAbilities.Add(original);
-				}
-			}
-
-			for (int index = 0; index < ability.Count; index++)
-			{
-				AbilityInfo info = ability[index].info;
-				if (info.ability == port)
-				{
-					info.metaCategories.Clear();
-					info.powerLevel = 8;
-					info.opponentUsable = false;
-					Plugin.Log.LogMessage("Removing void's version of the ability from the rulebook, totems, and Leshy: " + info.rulebookName);
-				}
-			}
-		}
-
-		public static void DoTransient()
-		{
-			Ability port;
-			Ability original;
-
-			port = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.VGUID, "Transient").id;
-			original = APIPlugin.AbilityIdentifier.GetAbilityIdentifier(Plugin.CGUID, "Transient").id;
-			var card = ScriptableObjectLoader<CardInfo>.AllData;
-			var ability = NewAbility.abilities;
-
-			Plugin.Log.LogMessage("Found Original Ability: Transient");
-
-			for (int index = 0; index < card.Count; index++)
-			{
-				CardInfo info = card[index];
-				if (info.HasAbility(port))
-				{
-					Plugin.Log.LogMessage("Switching Abilities on Card: " + info.name);
-					info.DefaultAbilities.Remove(port);
-					info.DefaultAbilities.Add(original);
-				}
-			}
-
-			for (int index = 0; index < ability.Count; index++)
-			{
-				AbilityInfo info = ability[index].info;
-				if (info.ability == port)
-				{
-					info.metaCategories.Clear();
-					info.powerLevel = 8;
-					info.opponentUsable = false;
-					Plugin.Log.LogMessage("Removing void's version of the ability from the rulebook, totems, and Leshy: " + info.rulebookName);
-				}
-			}
-		}
-
-
 	}
 }
