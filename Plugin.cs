@@ -48,12 +48,7 @@ namespace sigilReplacer
 			ConfigDefinition definition = new ConfigDefinition("Whitelist to Prevent Abilities from being Hidden", "Whitelist");
 			ConfigDescription description = new ConfigDescription("Items on this list will not be removed from the rulebook. Put the RULEBOOK names seperated by a comma, like in the example below. Do not remove the default values, as those are there to prevent other sigils from breaking.");
 
-
 			configList = Config.Bind(definition, "Dying,Sickness,Burning", description);
-
-			
-
-
 		}
 
 		private void Start()
