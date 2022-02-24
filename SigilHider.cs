@@ -7,7 +7,7 @@ using DiskCardGame;
 using HarmonyLib;
 using APIPlugin;
 
-namespace sigilReplacer
+namespace sigilManager
 {
     internal class SigilHider
     {
@@ -29,11 +29,13 @@ namespace sigilReplacer
                 }
             }
 
+
+            var split = Plugin.configList.Value.Split(',');
+
             //Go through the main list and if it can't find an ability, hide it
             for (int index = 0; index < abilities.Count; index++)
             {
                 //Make sure to add the exceptions to the list!
-                var split = Plugin.configList.Value.Split(',');
                 string abilityName = abilities[index].rulebookName;
                 for (int index2 = 0; index2 < split.Length; index2++)
                 {

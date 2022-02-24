@@ -7,7 +7,7 @@ using DiskCardGame;
 using HarmonyLib;
 using APIPlugin;
 
-namespace sigilReplacer
+namespace sigilManager
 {
     internal class SigilReplacer
     {

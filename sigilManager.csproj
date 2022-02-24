@@ -1,13 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>replaces the sigils if it detects a dup</Description>
+    <Description>a plugin designed to help manage sigils.</Description>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>sigilReplacer</AssemblyName>
-    <RootNamespace>sigilReplacer</RootNamespace>
+    <AssemblyName>sigilManager</AssemblyName>
+    <RootNamespace>sigilManager</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Resources\**" />
+    <EmbeddedResource Remove="Resources\**" />
+    <None Remove="Resources\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.0.7" PrivateAssets="all" />
@@ -37,14 +43,10 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
-
   <Target Name="CopyDLLs" AfterTargets="Build">
     <Message Text="Executing CopyDLLs task" Importance="High" />
 
-    <Copy SourceFiles="$(TargetDir)$(ProjectName).dll;" DestinationFolder="S:\Program Files (x86)\Steam\steamapps\common\Inscryption\BepInEx\plugins\1 test mod" />
+    <Copy SourceFiles="$(TargetDir)$(ProjectName).dll;" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\Inscryption\BepInEx\plugins\AllTheSigils-All_The_Sigils\plugins" />
 
     <Message Text="Copied build files" Importance="High" />
   </Target>
