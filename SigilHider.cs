@@ -1,11 +1,5 @@
-﻿using System;
+﻿using DiskCardGame;
 using System.Collections.Generic;
-using System.Text;
-using BepInEx;
-using BepInEx.Logging;
-using DiskCardGame;
-using HarmonyLib;
-using APIPlugin;
 
 namespace sigilManager
 {
